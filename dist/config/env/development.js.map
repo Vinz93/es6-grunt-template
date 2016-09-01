@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../config/env/development.js"],"names":["port","basePort","db"],"mappings":";;;;;kBAAe;AACbA,QAAM,IADO;AAEbC,YAAU,IAFG;AAGbC,MAAI;AAHS,C","file":"development.js","sourcesContent":["export default {\r\n  port: 3000,\r\n  basePort: 3000,\r\n  db: 'mongodb://localhost/es6-test'\r\n};\r\n"]}
