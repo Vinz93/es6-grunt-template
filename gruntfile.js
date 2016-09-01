@@ -38,7 +38,16 @@ copy: {
         dest: paths.dist
       }],
     },
-}
+},
+nodemon: {
+  dist: {
+    script: paths.src.main,
+    options: {
+      cwd: paths.dist,
+      nodeArgs: ['--harmony_proxies'],
+    },
+  },
+},
 });
 
   grunt.registerTask('build',[
@@ -46,7 +55,7 @@ copy: {
     'changed:babel',
     'copy:pkg',
   ]);
-  
+
   grunt.registerTask('serve',[
     'clean',
     'changed:babel'
