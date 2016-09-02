@@ -1,16 +1,12 @@
-import express from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 
 import config from './config/env/development';
+import app from './config/express';
 
-const app = express();
-
-app.use(bodyParser.json());
 
 function listen() {
   app.listen(config.port,
-     () => console.log(`app is listening on port ${config.port}`));
+     () => console.log(`app is listening on port ${config.port} !`));
 }
 
 function connect() {
