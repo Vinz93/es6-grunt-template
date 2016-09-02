@@ -18,8 +18,17 @@ router.route('/users')
 router.route('/players')
 .post(validate(playerValidator.create), Player.create);
 
+router.route('/players/facebook')
+.post(validate(playerValidator.facebook), Player.facebook);
+
+router.route('/players/twitter')
+.post(validate(playerValidator.twitter), Player.twitter);
+
 router.route('/sessions')
   .post(validate(sessionValidator.create), Session.create)
+
+// router.route('/sessions/validate')
+//   .post(validate(sessionValidator.validate), Session.validate)
 
 export default router;
 

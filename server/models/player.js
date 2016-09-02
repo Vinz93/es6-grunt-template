@@ -20,6 +20,12 @@ const PlayerSchema = new Schema({
       message: '`{VALUE}` is not a valid gender',
     },
   },
+  facebookId: {
+    type: String,
+  },
+  twitterId: {
+    type: String,
+  },
   bornAt: {
     type: Date,
     required: true,
@@ -52,7 +58,6 @@ export default User.discriminator('Player', PlayerSchema);
 /**
    Player is a subclass of User, so when you create a player it will a create
    a new user with more atributes.
-
 
 
 */
