@@ -24,7 +24,7 @@ app.use(_bodyParser2.default.json());
 
 function listen() {
   app.listen(_development2.default.port, function () {
-    return console.log('app its listening on port ' + _development2.default.port);
+    return console.log('app is listening on port ' + _development2.default.port);
   });
 }
 
