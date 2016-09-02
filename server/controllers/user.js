@@ -26,3 +26,25 @@ const UserController = {
 };
 
 export default UserController;
+
+/**
+the controller is exported with all of his functions.
+
+===== paginate ======
+
+its a mongoose plugins, that allows to paginate in a collection, returns an
+a array with this structure:
+
+{
+  "docs": [
+    {
+      ..
+    }
+  ],
+  "total": 1,
+  "limit": 20,
+  "offset": 0
+}
+
+
+*/

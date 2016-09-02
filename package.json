@@ -19,6 +19,7 @@
     "mongoose-paginate": "^5.0.0",
     "mongoose-unique-validator": "^1.0.2",
     "mongoose-validator": "^1.2.5",
+    "morgan": "^1.7.0",
     "rand-token": "^0.2.1"
   },
   "devDependencies": {
