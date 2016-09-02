@@ -2,11 +2,12 @@ import express from 'express';
 import validate from 'express-validation';
 
 //joi object with validations
+import sessionValidator from '../../config/param_validations/session';
 import playerValidator from '../../config/param_validations/player';
 import userValidator from '../../config/param_validations/user';
 import User from '../controllers/user';
 import Player from '../controllers/player';
-
+import Session from '../controllers/session';
 
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.route('/users')
 router.route('/players')
 .post(validate(playerValidator.create), Player.create);
 
+router.route('/sessions')
+  .post(validate(sessionValidator.create), Session.create)
 
 export default router;
 
