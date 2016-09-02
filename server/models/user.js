@@ -46,14 +46,14 @@ UserSchema.methods = {
 
 };
 
-UserSchema.pre('save', function (next) {
-  if (!this.isModified('password'))
-    return next();
-
-  this.password = crypto.createHash('md5').update(this.password).digest('hex');
-
-  next();
-});
+// UserSchema.pre('save', function (next) {
+//   if (!this.isModified('password'))
+//     return next();
+//
+//   this.password = crypto.createHash('md5').update(this.password).digest('hex');
+//
+//   next();
+// });
 
 UserSchema.plugin(uniqueValidator);
 UserSchema.plugin(paginate);
