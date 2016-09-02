@@ -7,7 +7,9 @@ var paths = {
     main: 'index.js',
   js:[
     'config/**/*.js',
-    'server/routes/**/*.js'
+    'server/routes/**/*.js',
+    'server/controllers/**/*.js',
+    'server/models/**/*.js',
   ]
 },
   dist: 'dist/'
@@ -44,6 +46,18 @@ copy: {
       }],
     },
 },
+watch: {
+      src: {
+        files: [
+          paths.src.main,
+          paths.src.js
+        ],
+        tasks: ['changed:babel'],
+        options: {
+          spawn: false,
+        },
+      }
+    },
 nodemon: {
   dist: {
     script: paths.src.main,
@@ -53,6 +67,18 @@ nodemon: {
     },
   },
 },
+concurrent: {
+  js: {
+    tasks: [
+      'nodemon',
+      'watch:src'
+    ],
+    options: {
+      logConcurrentOutput: true,
+      limit: 2
+    },
+  },
+}
 });
 
   grunt.registerTask('build',[
@@ -64,7 +90,7 @@ nodemon: {
   grunt.registerTask('serve',[
     'clean',
     'changed:babel',
-    'nodemon'
+    'concurrent'
   ]);
   grunt.registerTask('default', 'serve');
 };
