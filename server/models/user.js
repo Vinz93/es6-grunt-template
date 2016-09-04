@@ -56,3 +56,12 @@ UserSchema.plugin(uniqueValidator);
 UserSchema.plugin(paginate);
 
 export default mongoose.model('User', UserSchema);
+
+
+/**
+ pre middleware,
+ paginate
+ crypto
+
+
+*/
