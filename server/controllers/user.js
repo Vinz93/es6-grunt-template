@@ -14,11 +14,13 @@ const UserController = {
 
     const find = req.query.find || {};
     const sort = req.query.sort || { createdAt: 1 };
+    const select = { password: 0 , sessionToken: 0, twitterId: 0, facebookId: 0};
 
     User.paginate(find, {
       sort,
       offset,
       limit,
+      select,
     })
     .then(users => res.json(users))
     .catch(next);
