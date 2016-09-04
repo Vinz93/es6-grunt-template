@@ -9,6 +9,9 @@ import User from '../controllers/user';
 import Player from '../controllers/player';
 import Session from '../controllers/session';
 
+validate.options({
+  allowUnknownBody: false,
+});
 
 const router = express.Router();
 
