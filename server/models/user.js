@@ -5,8 +5,6 @@ import uniqueValidator from 'mongoose-unique-validator';
 import crypto from 'crypto';
 import randtoken from 'rand-token';
 
-
-
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -22,7 +20,6 @@ const UserSchema = new Schema({
     },
     password: {
       type: String,
-      required: true,
     },
     sessionToken: {
       type: String,
@@ -59,3 +56,12 @@ UserSchema.plugin(uniqueValidator);
 UserSchema.plugin(paginate);
 
 export default mongoose.model('User', UserSchema);
+
+
+/**
+ pre middleware,
+ paginate
+ crypto
+
+
+*/

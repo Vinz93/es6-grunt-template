@@ -10,6 +10,7 @@ var paths = {
     'server/routes/**/*.js',
     'server/controllers/**/*.js',
     'server/models/**/*.js',
+    'server/helpers/**/*.js',
   ]
 },
   dist: 'dist/'
