@@ -24,6 +24,14 @@ const UserSchema = new Schema({
     sessionToken: {
       type: String,
       required: false,
+    },
+    verificationToken:{
+      type: String,
+      required: false,
+    },
+    verified:{
+      type: Boolean,
+      required: true,
     }
 });
 
@@ -38,6 +46,9 @@ UserSchema.methods = {
 
   createSessionToken() {
     this.sessionToken = this.generateToken();
+  },
+  createVerificationToken(){
+    this.verificationToken = this.generateToken();
   }
 
 

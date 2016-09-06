@@ -11,6 +11,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "crypto": "0.0.3",
+    "email-templates": "^2.4.1",
     "express": "^4.14.0",
     "express-validation": "^1.0.0",
     "joi": "^8.4.2",
@@ -20,6 +21,8 @@
     "mongoose-unique-validator": "^1.0.2",
     "mongoose-validator": "^1.2.5",
     "morgan": "^1.7.0",
+    "nodemailer": "^2.6.0",
+    "path": "^0.12.7",
     "rand-token": "^0.2.1"
   },
   "devDependencies": {
