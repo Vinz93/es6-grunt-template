@@ -11,7 +11,8 @@ var paths = {
     'server/controllers/**/*.js',
     'server/models/**/*.js',
     'server/helpers/**/*.js',
-  ]
+  ],
+  views: 'server/views/**/*',
 },
   dist: 'dist/'
 };
@@ -40,6 +41,15 @@ clean: {
   }
 },
 copy: {
+  statics: {
+        files: [{
+          expand: true,
+          src: [
+            paths.src.views,
+          ],
+          dest: paths.dist
+        }],
+      },
   pkg: {
       files: [{
         src: paths.pkg,
@@ -91,6 +101,7 @@ concurrent: {
   grunt.registerTask('serve',[
     'clean',
     'changed:babel',
+    'changed:copy:statics',
     'concurrent'
   ]);
   grunt.registerTask('default', 'serve');

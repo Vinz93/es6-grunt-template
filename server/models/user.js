@@ -8,48 +8,67 @@ import randtoken from 'rand-token';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  email: {
-      type: String,
-      required: true,
-      validate: validate({
-        validator: 'isEmail',
-        message: 'not a valid email',
-      }),
-      unique: true,
-      uniqueCaseInsensitive: true,
+    email: {
+        type: String,
+        required: true,
+        validate: validate({
+            validator: 'isEmail',
+            message: 'not a valid email',
+        }),
+        unique: true,
+        uniqueCaseInsensitive: true,
     },
     password: {
-      type: String,
+        type: String,
     },
     sessionToken: {
-      type: String,
-      required: false,
+        type: String,
+        required: false,
+    },
+    verificationToken: {
+        type: String,
+        required: false,
+    },
+    recoveryToken: {
+        type: String,
+        required: false,
+    },
+    verified: {
+        type: Boolean,
+        required: true,
+        default: false,
     }
 });
 
 UserSchema.methods = {
-  authenticate(password) {
-    return crypto.createHash('md5').update(password).digest('hex') === this.password;
-  },
+    authenticate(password) {
+        return crypto.createHash('md5').update(password).digest('hex') === this.password;
+    },
 
-  generateToken() {
-    return `${this._id}${randtoken.generate(16)}`;
-  },
+    generateToken() {
+        return `${this._id}${randtoken.generate(16)}`;
+    },
 
-  createSessionToken() {
-    this.sessionToken = this.generateToken();
-  }
+    createSessionToken() {
+        this.sessionToken = this.generateToken();
+    },
+    createVerificationToken() {
+        this.verificationToken = this.generateToken();
+    },
+    createRecoveryToken() {
+        this.recoveryToken = this.generateToken();
+    }
 
 
 };
 
-UserSchema.pre('save', function (next) {
-  if (!this.isModified('password'))
-    return next();
+UserSchema.pre('save', function(next) {
+    if (!this.isModified('password'))
+        return next();
 
-  this.password = crypto.createHash('md5').update(this.password).digest('hex');
+    this.password = crypto.createHash('md5').update(this.password).digest('hex');
 
-  next();
+    next();
 });
 
 UserSchema.plugin(uniqueValidator);
