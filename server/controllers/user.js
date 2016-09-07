@@ -63,7 +63,36 @@ const UserController = {
                 });
             })
             .catch(err => res.json(err));
-    }
+    },
+    
+    vericationToken(req, res, next){
+      Player.findOne({
+              email: req.body.email,
+          }).then(player => {
+              if (!player)
+                  return res.status(404).json({ msg: "use not found"});
+
+              const config = req.app.locals.config;
+              const template = path.join(config.root, '/server/views/mail/mail_verification');
+              const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
+              player.createVerificationToken();
+              send({
+                  to: player.email,
+                  subject: 'Tap and Win Verification',
+              }, {
+                  player,
+              }, err => {
+                  if (err)
+                      return next(err);
+
+                  player.save()
+                      .then(() => res.status(201).end())
+                      .catch(next);
+              });
+          })
+          .catch(err => res.json(err));
+    },
+
 };
 
 export default UserController;
