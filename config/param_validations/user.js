@@ -8,5 +8,10 @@ export default {
       offset: Joi.number().integer(),
       limit: Joi.number().integer(),
     }
+  },
+  recoveryToken:{
+    body:{
+      email: Joi.string().email().required(),
+    }
   }
 }

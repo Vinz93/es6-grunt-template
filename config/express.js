@@ -15,6 +15,6 @@ app.use(morgan('dev'));
 app.use(config.path, routes);
 
 app.locals.transporter = nodemailer.createTransport(config.mailer);
-
+app.locals.config = config;
 
 export default app;

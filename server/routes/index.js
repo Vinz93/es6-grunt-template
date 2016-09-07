@@ -18,6 +18,9 @@ const router = express.Router();
 router.route('/users')
 .get(validate(userValidator.readAll), User.readAll);
 
+router.route('/users/password_recovery')
+.post(validate(userValidator.recoveryToken), User.recoveryToken);
+
 router.route('/players')
 .post(validate(playerValidator.create), Player.create);
 
