@@ -46,7 +46,6 @@ const UserController = {
                     return res.status(404).json({ msg: "use not found"});
                 const config = req.app.locals.config;
                 const template = path.join(config.root, '/server/views/mail/password_recovery');
-                console.log("template route :", template);
                 const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
                 player.createRecoveryToken();
                 send({
@@ -87,6 +86,60 @@ a array with this structure:
   "limit": 20,
   "offset": 0
 }
+
+==========================================================
+                          MAILER
+===========================================================
+using nodemailer.
+
+====================== 1 settings (mail account) =========================
+with this mailer object you can define or authtenticate your mailer account.
+
+transport: {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'techludopia@gmail.com',
+        pass: '12ludotech34',
+    },
+}
+====================== 2 create the transporter  =============================
+var transporter = nodemailer.createTransport(transport[, defaults])
+Where
+  -transporter is going to be an object that is able to send mail
+  -transport is the transport configuration object, connection url or
+   a transport plugin instance.
+  -defaults is an object that defines default values for mail options
+
+transporter = nodemailer.createTransport(transport);
+
+================= 3 Template configuration ==================================
+import templates from 'email-templates';
+
+const EmailTemplate = templates.EmailTemplate;
+
+ //== se define la ruta en donde se aloja el template ==.
+ // nota: el template debe tener el nombre html.ejs y se debe tener el modulo
+ // de ejs, la ruta solo apunta a la carpeta donde se encuentra el archivo ejs..
+
+const template = path.join(config.root, '/server/views/mail/password_recovery');
+
+
+================= 4 Template configuration ==================================
+
+Nodemailer allows to use simple built-in templating or alternatively external
+ renderers for common message types.
+
+var send = transporter.templateSender(new EmailTemplate('template/directory'));
+
+templates is an object with template strings for built-in renderer
+or an EmailTemplate object for more complex rendering
+
+-the execute the send function.
+
+send(mailData, context).then(...).catch(...);
+
 
 
 */
