@@ -18,5 +18,11 @@ export default {
     body:{
       email: Joi.string().email().required(),
     }
+  },
+  checkVerificationToken:{
+    body:{
+      email: Joi.string().email().required(),
+      verificationToken: Joi.string().required(),
+    }
   }
 }

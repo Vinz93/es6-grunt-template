@@ -24,6 +24,9 @@ router.route('/users/password_recovery')
 router.route('/users/verification_recovery')
 .post(validate(userValidator.vericationToken), User.vericationToken);
 
+router.route('/users/check')
+.post(validate(userValidator.checkVerificationToken), User.checkVerificationToken);
+
 router.route('/players')
 .post(validate(playerValidator.create), Player.create);
 

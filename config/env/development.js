@@ -15,4 +15,7 @@ export default {
             pass: '12ludotech34',
         },
     },
+    expiredTime: 24,
+    // expiredTime: 0.01,
+
 };

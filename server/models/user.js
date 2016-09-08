@@ -38,13 +38,20 @@ const UserSchema = new Schema({
         required: true,
         default: false,
     }
+},{
+  timestamps: true
 });
 
 UserSchema.methods = {
     authenticate(password) {
         return crypto.createHash('md5').update(password).digest('hex') === this.password;
     },
-
+    expiredVerification(time){
+      const limit = timeUnit.hours.toMillis(time);
+      if(Date.now() - this.createAt.getTime() > limit )
+        return true;
+      return false;
+    },
     generateToken() {
         return `${this._id}${randtoken.generate(16)}`;
     },
@@ -81,6 +88,8 @@ export default mongoose.model('User', UserSchema);
  pre middleware,
  paginate
  crypto
+
+ timestamps options, add the create_at and update_at fields to the model .
 
 
 */

@@ -5,6 +5,7 @@
  */
 import path from 'path';
 import templates from 'email-templates';
+import Promise from 'bluebird';
 
 import { paginate } from '../helpers/utils';
 import User from '../models/user';
@@ -64,7 +65,7 @@ const UserController = {
             })
             .catch(err => res.json(err));
     },
-    
+
     vericationToken(req, res, next){
       Player.findOne({
               email: req.body.email,
@@ -92,6 +93,31 @@ const UserController = {
           })
           .catch(err => res.json(err));
     },
+
+    checkVerificationToken(req, res, next){
+      const expiredTime = req.app.locals.config.exipedTime;
+      Player.findOne({ email: req.body.email })
+            .then(player =>{
+              console.log("hello then - before if's");
+              if(!player){
+                console.log("---anot found?");
+              return Promise.reject("user no found!!");
+              }
+              if(!player.verificationToken == req.body.verificationToken || player.expiredVerification(expiredTime)){
+                console.log("aja super vencido ps");
+                return Promise.reject("----Invalid Token!");
+              }
+              console.log("-----se supone quye es legal!");
+              player.verificationToken = undefined;
+              player.verified = true;
+              player.createSessionToken();
+              return player.save();
+            })
+            .then(player =>{
+               res.status(200).json(player);
+             })
+            .catch(err => res.json(err));
+    }
 
 };
 
