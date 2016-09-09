@@ -112,7 +112,6 @@ const UserController = {
                 if (!(player.verificationToken == req.body.verificationToken) || player.expiredVerification(expiredTime))
                     return Promise.reject("Invalid Token!");
 
-                console.log("-----se supone quye es legal!");
                 player.verificationToken = undefined;
                 player.verified = true;
                 player.createSessionToken();
