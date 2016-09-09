@@ -24,7 +24,8 @@
     "morgan": "^1.7.0",
     "nodemailer": "^2.6.0",
     "path": "^0.12.7",
-    "rand-token": "^0.2.1"
+    "rand-token": "^0.2.1",
+    "time-unit": "^1.1.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.14.0",

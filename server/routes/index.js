@@ -22,7 +22,7 @@ router.route('/users/password_recovery')
 .post(validate(userValidator.recoveryToken), User.recoveryToken);
 
 router.route('/users/verification_recovery')
-.post(validate(userValidator.vericationToken), User.vericationToken);
+.post(validate(userValidator.verificationToken), User.verificationToken);
 
 router.route('/users/check')
 .post(validate(userValidator.checkVerificationToken), User.checkVerificationToken);

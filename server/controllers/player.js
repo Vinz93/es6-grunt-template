@@ -29,7 +29,7 @@ const PlayerController = {
                         .catch(next);
                 });
             })
-            .catch(err => res.json(err));
+            .catch(err => res.status(400).json(err));
     },
 
 

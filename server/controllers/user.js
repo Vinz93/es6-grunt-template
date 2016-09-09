@@ -7,7 +7,9 @@ import path from 'path';
 import templates from 'email-templates';
 import Promise from 'bluebird';
 
-import { paginate } from '../helpers/utils';
+import {
+    paginate
+} from '../helpers/utils';
 import User from '../models/user';
 import Player from '../models/player';
 
@@ -44,7 +46,9 @@ const UserController = {
                 email: req.body.email,
             }).then(player => {
                 if (!player)
-                    return res.status(404).json({ msg: "use not found"});
+                    return res.status(404).json({
+                        msg: "use not found"
+                    });
                 const config = req.app.locals.config;
                 const template = path.join(config.root, '/server/views/mail/password_recovery');
                 const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
@@ -66,57 +70,60 @@ const UserController = {
             .catch(err => res.json(err));
     },
 
-    vericationToken(req, res, next){
-      Player.findOne({
-              email: req.body.email,
-          }).then(player => {
-              if (!player)
-                  return res.status(404).json({ msg: "use not found"});
+    verificationToken(req, res, next) {
+        Player.findOne({
+                email: req.body.email,
+            }).then(player => {
+                if (!player)
+                    return res.status(404).json({
+                        msg: "use not found"
+                    });
 
-              const config = req.app.locals.config;
-              const template = path.join(config.root, '/server/views/mail/mail_verification');
-              const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
-              player.createVerificationToken();
-              send({
-                  to: player.email,
-                  subject: 'Tap and Win Verification',
-              }, {
-                  player,
-              }, err => {
-                  if (err)
-                      return next(err);
+                const config = req.app.locals.config;
+                const template = path.join(config.root, '/server/views/mail/mail_verification');
+                const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
+                player.createVerificationToken();
+                send({
+                    to: player.email,
+                    subject: 'Tap and Win Verification',
+                }, {
+                    player,
+                }, err => {
+                    if (err)
+                        return next(err);
 
-                  player.save()
-                      .then(() => res.status(201).end())
-                      .catch(next);
-              });
-          })
-          .catch(err => res.json(err));
+                    player.save()
+                        .then(() => res.status(201).end())
+                        .catch(next);
+                });
+            })
+            .catch(err => res.json(err));
     },
 
-    checkVerificationToken(req, res, next){
-      const expiredTime = req.app.locals.config.exipedTime;
-      Player.findOne({ email: req.body.email })
-            .then(player =>{
-              console.log("hello then - before if's");
-              if(!player){
-                console.log("---anot found?");
-              return Promise.reject("user no found!!");
-              }
-              if(!player.verificationToken == req.body.verificationToken || player.expiredVerification(expiredTime)){
-                console.log("aja super vencido ps");
-                return Promise.reject("----Invalid Token!");
-              }
-              console.log("-----se supone quye es legal!");
-              player.verificationToken = undefined;
-              player.verified = true;
-              player.createSessionToken();
-              return player.save();
+    checkVerificationToken(req, res, next) {
+        const expiredTime = req.app.locals.config.expiredTime;
+        Player.findOne({
+                email: req.body.email
             })
-            .then(player =>{
-               res.status(200).json(player);
-             })
-            .catch(err => res.json(err));
+            .then(player => {
+                if (!player)
+                    return Promise.reject("user no found!!");
+
+                if (!(player.verificationToken == req.body.verificationToken) || player.expiredVerification(expiredTime))
+                    return Promise.reject("Invalid Token!");
+
+                console.log("-----se supone quye es legal!");
+                player.verificationToken = undefined;
+                player.verified = true;
+                player.createSessionToken();
+                return player.save();
+            })
+            .then(player => {
+                res.status(200).json(player);
+            })
+            .catch(err => res.status(400).json({
+                error: err
+            }));
     }
 
 };

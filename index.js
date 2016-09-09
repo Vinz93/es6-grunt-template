@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import Promise from 'bluebird';
 
 import config from './config/env/development';
 import app from './config/express';
 
+mongoose.Promise = Promise;
 
 function listen() {
   app.listen(config.port,
