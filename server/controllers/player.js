@@ -12,9 +12,9 @@ const PlayerController = {
     create(req, res, next) {
         Player.create(req.body)
             .then(player => {
-                  player.createVerificationToken();
-                  const template = path.join(config.root, '/server/views/mail/mail_verification');
-                  const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
+                player.createVerificationToken();
+                const template = path.join(config.root, '/server/views/mail/mail_verification');
+                const send = req.app.locals.transporter.templateSender(new EmailTemplate(template));
                 send({
                     to: player.email,
                     subject: 'Tap and Win Verification',
@@ -25,7 +25,7 @@ const PlayerController = {
                         return next(err);
 
                     player.save()
-                        .then(() => res.status(201).end())
+                        .then(player => res.status(201).json(player))
                         .catch(next);
                 });
             })
@@ -60,8 +60,8 @@ const PlayerController = {
                 twitterId: req.body.twitterId
             }).then(user => {
                 if (!user) {
-                  let data = req.body;
-                  data.verified = true;
+                    let data = req.body;
+                    data.verified = true;
                     Player.create(data)
                         .then(player => {
                             player.createSessionToken();
@@ -73,6 +73,71 @@ const PlayerController = {
                     user.createSessionToken();
                     user.save();
                     res.status(200).json(user)
+                }
+            })
+            .catch(err => res.json(err));
+    },
+
+    facebookV2(req, res, next) {
+        let data = req.body;
+        Player.findOne({
+                facebookId: data.facebookId
+            })
+            .then(player => {
+                if (player) {
+                    //then login return user
+                    player.createSessionToken();
+                    player.save()
+                        .then(player => res.status(200).json(player))
+                        .catch(err => res.json(err));
+                } else {
+                    if (!data.email) {
+                        //then create new player
+                        data.verified = true;
+                        Player.create(data)
+                            .then(player => {
+                                player.createSessionToken();
+                                player.save()
+                                    .then(player => res.status(201).json(player))
+                                    .catch(err => res.json(err));
+                            })
+                            .catch(err => res.json(err));
+                    } else {
+                        Player.findOne({
+                                email: data.email
+                            })
+                            .then(player => {
+                                if (!player) {
+                                    //then create
+                                    data.verified = true;
+                                    Player.create(data)
+                                        .then(player => {
+                                            player.createSessionToken();
+                                            player.save()
+                                                .then(player => res.status(201).json(player))
+                                                .catch(err => res.json(err));
+                                        })
+                                        .catch(err => res.json(err));
+                                } else {
+                                    if (player.verified == true) {
+                                        //then login return user
+                                        player.createSessionToken();
+                                        player.save()
+                                            .then(player => res.status(200).json(player))
+                                            .catch(err => res.json(err));
+                                    } else {
+                                        //then verified && login return user
+                                        player.verified = true;
+                                        player.createSessionToken();
+                                        player.save()
+                                            .then(player => res.status(200).json(player))
+                                            .catch(err => res.json(err));
+                                    }
+                                }
+                            })
+                            .catch(err => res.json(err))
+
+                    }
                 }
             })
             .catch(err => res.json(err));
