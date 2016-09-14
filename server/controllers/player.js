@@ -6,6 +6,19 @@ import Player from '../models/player';
 import config from '../../config/env/development';
 
 const EmailTemplate = templates.EmailTemplate;
+const createAndLogin = (res, status, player) => {
+    if (player.verified == false)
+        player.verified = true;
+    if (player.verificationToken)
+        player.verificationToken = undefined;
+
+    player.createSessionToken();
+    player.save()
+        .then(player => {
+            res.status(status).json(player);
+        })
+        .catch(err => res.json(err));
+};
 
 
 const PlayerController = {
@@ -85,22 +98,11 @@ const PlayerController = {
             })
             .then(player => {
                 if (player) {
-                    //then login return user
-                    player.createSessionToken();
-                    player.save()
-                        .then(player => res.status(200).json(player))
-                        .catch(err => res.json(err));
+                    createAndLogin(res, 200, player);
                 } else {
                     if (!data.email) {
-                        //then create new player
-                        data.verified = true;
                         Player.create(data)
-                            .then(player => {
-                                player.createSessionToken();
-                                player.save()
-                                    .then(player => res.status(201).json(player))
-                                    .catch(err => res.json(err));
-                            })
+                            .then(createAndLogin.bind(this, res, 201))
                             .catch(err => res.json(err));
                     } else {
                         Player.findOne({
@@ -108,31 +110,11 @@ const PlayerController = {
                             })
                             .then(player => {
                                 if (!player) {
-                                    //then create
-                                    data.verified = true;
                                     Player.create(data)
-                                        .then(player => {
-                                            player.createSessionToken();
-                                            player.save()
-                                                .then(player => res.status(201).json(player))
-                                                .catch(err => res.json(err));
-                                        })
+                                        .then(createAndLogin.bind(this, res, 201))
                                         .catch(err => res.json(err));
                                 } else {
-                                    if (player.verified == true) {
-                                        //then login return user
-                                        player.createSessionToken();
-                                        player.save()
-                                            .then(player => res.status(200).json(player))
-                                            .catch(err => res.json(err));
-                                    } else {
-                                        //then verified && login return user
-                                        player.verified = true;
-                                        player.createSessionToken();
-                                        player.save()
-                                            .then(player => res.status(200).json(player))
-                                            .catch(err => res.json(err));
-                                    }
+                                    createAndLogin(res, 200, player);
                                 }
                             })
                             .catch(err => res.json(err))
