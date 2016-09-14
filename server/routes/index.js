@@ -10,34 +10,37 @@ import Player from '../controllers/player';
 import Session from '../controllers/session';
 
 validate.options({
-  allowUnknownBody: false,
+    allowUnknownBody: false,
 });
 
 const router = express.Router();
 
 router.route('/users')
-.get(validate(userValidator.readAll), User.readAll);
+    .get(validate(userValidator.readAll), User.readAll);
 
 router.route('/users/password_recovery')
-.post(validate(userValidator.recoveryToken), User.recoveryToken);
+    .post(validate(userValidator.recoveryToken), User.recoveryToken);
 
 router.route('/users/verification_recovery')
-.post(validate(userValidator.verificationToken), User.verificationToken);
+    .post(validate(userValidator.verificationToken), User.verificationToken);
 
 router.route('/users/check')
-.post(validate(userValidator.checkVerificationToken), User.checkVerificationToken);
+    .post(validate(userValidator.checkVerificationToken), User.checkVerificationToken);
 
 router.route('/players')
-.post(validate(playerValidator.create), Player.create);
+    .post(validate(playerValidator.create), Player.create);
 
 router.route('/players/facebook')
-.post(validate(playerValidator.facebook), Player.facebook);
+    .post(validate(playerValidator.facebook), Player.facebook);
+
+router.route('/v2/players/facebook')
+    .post(validate(playerValidator.facebookV2), Player.facebookV2);
 
 router.route('/players/twitter')
-.post(validate(playerValidator.twitter), Player.twitter);
+    .post(validate(playerValidator.twitter), Player.twitter);
 
 router.route('/sessions')
-  .post(validate(sessionValidator.create), Session.create)
+    .post(validate(sessionValidator.create), Session.create)
 
 // router.route('/sessions/validate')
 //   .post(validate(sessionValidator.validate), Session.validate)
