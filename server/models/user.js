@@ -11,28 +11,25 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     email: {
         type: String,
-        required: true,
         validate: validate({
             validator: 'isEmail',
             message: 'not a valid email',
         }),
         unique: true,
         uniqueCaseInsensitive: true,
+        sparse: true,
     },
     password: {
         type: String,
     },
     sessionToken: {
         type: String,
-        required: false,
     },
     verificationToken: {
         type: String,
-        required: false,
     },
     recoveryToken: {
         type: String,
-        required: false,
     },
     verified: {
         type: Boolean,
@@ -92,6 +89,8 @@ export default mongoose.model('User', UserSchema);
  timeUnit
 
  timestamps options, add the create_at and update_at fields to the model .
+
+ sparce: true , allows to have null values in a field with unique restrictions.
 
 
 */
