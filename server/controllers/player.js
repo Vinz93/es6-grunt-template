@@ -8,6 +8,32 @@ import providerLogin from '../helpers/provider-login';
 
 const EmailTemplate = templates.EmailTemplate;
 
+const handleProviders = (res, data, player) =>{
+  if (player) {
+      providerLogin(res, 200, player);
+  } else {
+      if (!data.email) {
+          Player.create(data)
+              .then(providerLogin.bind(this, res, 201))
+              .catch(err => res.json(err));
+      } else {
+          Player.findOne({
+                  email: data.email
+              })
+              .then(player => {
+                  if (!player) {
+                      Player.create(data)
+                          .then(providerLogin.bind(this, res, 201))
+                          .catch(err => res.json(err));
+                  } else {
+                      providerLogin(res, 200, player);
+                  }
+              })
+              .catch(err => res.json(err))
+      }
+  }
+};
+
 const PlayerController = {
     create(req, res, next) {
         Player.create(req.body)
@@ -83,31 +109,7 @@ const PlayerController = {
         Player.findOne({
                 facebookId: data.facebookId
             })
-            .then(player => {
-                if (player) {
-                    providerLogin(res, 200, player);
-                } else {
-                    if (!data.email) {
-                        Player.create(data)
-                            .then(providerLogin.bind(this, res, 201))
-                            .catch(err => res.json(err));
-                    } else {
-                        Player.findOne({
-                                email: data.email
-                            })
-                            .then(player => {
-                                if (!player) {
-                                    Player.create(data)
-                                        .then(providerLogin.bind(this, res, 201))
-                                        .catch(err => res.json(err));
-                                } else {
-                                    providerLogin(res, 200, player);
-                                }
-                            })
-                            .catch(err => res.json(err))
-                    }
-                }
-            })
+            .then(handleProviders.bind(this,res,data))
             .catch(err => res.json(err));
     }
 };
